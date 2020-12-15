@@ -1,0 +1,15 @@
+{
+  "name": "purescript-supply",
+  "version": "1.0.0",
+  "description": "A splittable supply for Purescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anupam Jain",
+  "license": "Apache2.0",
+  "devDependencies": {
+    "purescript": "^0.13.8",
+    "spago": "^0.17.0"
+  }
+}
