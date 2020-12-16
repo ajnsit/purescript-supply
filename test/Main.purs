@@ -13,6 +13,8 @@ main :: Effect Unit
 main = withSupply \s -> do
   let (v1 /\ v2 /\ v3 /\ v4 /\ _) = split4 s
   let (v5 /\ v6 /\ v7 /\ v8 /\ _) = split4 v2
-  log $ show $ supplyValue v1
-  log $ show $ supplyValue v8
-  log $ show $ supplyValue v3
+  log $ show $ supplyValue v1 -- 0
+  log $ show $ supplyValue v1 -- 0
+  log $ show $ supplyValue v8 -- 1
+  log $ show $ supplyValue v3 -- 2
+  log $ show $ supplyValue v8 -- 1
