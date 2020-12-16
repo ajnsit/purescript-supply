@@ -78,7 +78,7 @@ split4         :: forall a. Supply a -> Tuple4 (Supply a) (Supply a) (Supply a) 
 map :: forall a b. (a -> b) -> Supply a -> Supply b
 ```
 
-Also supplies have a comonad instance so you can use `extend` (or `modifySupply` which is the flipped version).
+Also supplies have a `Comonad` instance so you can use `extend` (or `modifySupply` which is the flipped version).
 
 ```purescript
 -- | Generate a new supply by systematically applying a function to an existing supply
