@@ -2,6 +2,8 @@ module Supply where
 
 import Control.Applicative (pure)
 import Control.Bind (bind, discard)
+import Control.Comonad (class Comonad)
+import Control.Extend (class Extend)
 import Data.CommutativeRing ((+))
 import Data.Function (($))
 import Data.Functor (class Functor)
@@ -65,12 +67,28 @@ newSupply start next = do
     pure $ Node v ls rs
 
 -- | Create a new supply and use it without effects
-withSupply :: forall r. (Supply Int -> r) -> r
-withSupply f = f (unsafePerformEffect (newSupply 0 (_+1)))
+withSupply :: forall r a. a -> (a -> a) -> (Supply a -> r) -> r
+withSupply a next f = f (unsafePerformEffect (newSupply a next))
 
 -- | Generate a new supply by systematically applying a function
 -- to an existing supply.  This function, together with 'supplyValue'
--- form a comonad on 'Supply'.
+-- forms a comonad on 'Supply'.
 modifySupply :: forall a b. Supply a -> (Supply a -> b) -> Supply b
 modifySupply s f = Node (Lazy.defer \_ -> f s) (Lazy.defer \_ -> modifySupply (Lazy.force l) f) (Lazy.defer \_ -> modifySupply (Lazy.force r) f)
   where Node _ l r = s
+
+instance extendSupply :: Extend Supply where
+  extend f s = modifySupply s f
+
+instance comonadSupply :: Comonad Supply where
+  extract = supplyValue
+
+-- Specialised supplies for convenience
+
+-- | Create a new integer supply
+newIntSupply :: Effect (Supply Int)
+newIntSupply = newSupply 0 (_+1)
+
+-- | Create a new integer supply and use it without effects
+withIntSupply :: forall r. (Supply Int -> r) -> r
+withIntSupply = withSupply 0 (_+1)
