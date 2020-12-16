@@ -1,5 +1,5 @@
 # purescript-supply
-A splittable value supply for Purescript
+A pure, splittable, value supply for Purescript
 
 ## Usage
 
@@ -11,20 +11,25 @@ Then you can use the functions in `Supply` module. Example -
 
 ```purescript
 main :: Effect Unit
-main = withSupply \s -> do
-  let (v1 /\ v2 /\ v3 /\ v4 /\ _) = split4 s
+main = withIntSupply \intSupply -> do
+  let v = map (\i -> "v" <> show i) intSupply
+  let (v1 /\ v2 /\ v3 /\ v4 /\ _) = split4 v
   let (v5 /\ v6 /\ v7 /\ v8 /\ _) = split4 v2
-  log $ show $ supplyValue v1
-  log $ show $ supplyValue v8
-  log $ show $ supplyValue v3
+  log $ supplyValue v1
+  log $ supplyValue v1
+  log $ supplyValue v8
+  log $ supplyValue v3
+  log $ supplyValue v8
 ```
 
 The supplied values are sequential integers that are lazily resolved when they are used. So this should print -
 
 ```
-0
-1
-2
+v0
+v0
+v1
+v2
+v1
 ```
 
 ## API
@@ -69,7 +74,16 @@ split4         :: forall a. Supply a -> Tuple4 (Supply a) (Supply a) (Supply a) 
 
 `Supply` has a `Functor` instance.
 
-Also supplies have a comonad instance so you can use `modifySupply` a.k.a. `cobind`.
+```purescript
+map :: forall a b. (a -> b) -> Supply a -> Supply b
+```
+
+Also supplies have a comonad instance so you can use `extend` (or `modifySupply` which is the flipped version).
+
+```purescript
+-- | Generate a new supply by systematically applying a function to an existing supply
+extend :: forall a b. (Supply a -> b) -> Supply a -> Supply b
+```
 
 ```purescript
 -- | Generate a new supply by systematically applying a function to an existing supply
