@@ -75,14 +75,3 @@ Also supplies have a comonad instance so you can use `modifySupply` a.k.a. `cobi
 -- | Generate a new supply by systematically applying a function to an existing supply
 modifySupply :: forall a b. Supply a -> (Supply a -> b) -> Supply b
 ```
-
-### Misc
-
-This repo includes an implemntation of `unsafeInterleaveEffect` -
-
-```purescript
--- | unsafeInterleaveEffect allows an Effect to be deferred lazily.
---   When passed a value of type Effect a, the Effect *should* only be performed when the value of the a is demanded.
--- TODO: Put this in purescript-effect
-unsafeInterleaveEffect :: forall a. Effect a -> Effect {val :: a}
-```
