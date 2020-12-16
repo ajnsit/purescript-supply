@@ -43,7 +43,7 @@ newSupply :: forall a. a -> (a -> a) -> Effect (Supply a)
 
 Or pure interface -
 ```purescript
-withSupply :: forall r. (Supply Int -> r) -> r
+withSupply :: forall r a. a -> (a -> a) -> (Supply a -> r) -> r
 ```
 
 ### Getting the current value from a supply
@@ -88,4 +88,20 @@ extend :: forall a b. (Supply a -> b) -> Supply a -> Supply b
 ```purescript
 -- | Generate a new supply by systematically applying a function to an existing supply
 modifySupply :: forall a b. Supply a -> (Supply a -> b) -> Supply b
+```
+
+### Specialised Supplies for convenience
+
+For convenience, functions are provided to directly construct a supply of integers.
+
+```purescript
+-- | Create a new integer supply
+newIntSupply :: Effect (Supply Int)
+newIntSupply = newSupply 0 (_+1)
+```
+
+```purescript
+-- | Create a new integer supply and use it without effects
+withIntSupply :: forall r. (Supply Int -> r) -> r
+withIntSupply = withSupply 0 (_+1)
 ```
