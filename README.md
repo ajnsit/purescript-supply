@@ -36,20 +36,21 @@ v1
 
 ### Creating a new Supply
 
-Effectful interface -
+Effectful interface.
 ```purescript
-newSupply :: forall a. a -> (a -> a) -> Effect (Supply a)
+newSupply :: forall s a. a -> (a -> a) -> Effect (Supply s a)
 ```
 
-Or pure interface -
+Pure interface. The phantom type parameter prevents supplies from being used outside of
+the handler functions so as not to break referential transparency.
 ```purescript
-withSupply :: forall r a. a -> (a -> a) -> (Supply a -> r) -> r
+withSupply :: forall r a. a -> (a -> a) -> (forall s. Supply s a -> r) -> r
 ```
 
 ### Getting the current value from a supply
 
 ```purescript
-supplyValue    :: forall a. Supply a -> a
+supplyValue :: forall s a. Supply a -> a
 ```
 
 Each supply can only provide a single value. Repeatedly calling `supplyValue` on the same supply will give the same result.
@@ -61,13 +62,13 @@ To get multiple values, supplies can be split any number of times.
 ```purescript
 -- | Split a supply into two different supplies.
 -- The resulting supplies are different from the input supply.
-split2         :: forall a. Supply a -> Tuple (Supply a) (Supply a)
+split2 :: forall s a. Supply s a -> Tuple (Supply s a) (Supply s a)
 
 -- | Split a supply into three different supplies.
-split3         :: forall a. Supply a -> Tuple3 (Supply a) (Supply a) (Supply a)
+split3 :: forall s a. Supply a -> Tuple3 (Supply s a) (Supply s a) (Supply s a)
 
 -- | Split a supply into four different supplies.
-split4         :: forall a. Supply a -> Tuple4 (Supply a) (Supply a) (Supply a) (Supply a)
+split4 :: forall s a. Supply s a -> Tuple4 (Supply s a) (Supply s a) (Supply s a) (Supply s a)
 ```
 
 ### Modifying supplies
@@ -75,33 +76,35 @@ split4         :: forall a. Supply a -> Tuple4 (Supply a) (Supply a) (Supply a) 
 `Supply` has a `Functor` instance.
 
 ```purescript
-map :: forall a b. (a -> b) -> Supply a -> Supply b
+map :: forall s a b. (a -> b) -> Supply s a -> Supply s b
 ```
 
 Also supplies have a `Comonad` instance so you can use `extend` (or `modifySupply` which is the flipped version).
 
 ```purescript
 -- | Generate a new supply by systematically applying a function to an existing supply
-extend :: forall a b. (Supply a -> b) -> Supply a -> Supply b
+extend :: forall s a b. (Supply s a -> b) -> Supply s a -> Supply s b
 ```
 
 ```purescript
 -- | Generate a new supply by systematically applying a function to an existing supply
-modifySupply :: forall a b. Supply a -> (Supply a -> b) -> Supply b
+modifySupply :: forall s a b. Supply s a -> (Supply s a -> b) -> Supply s b
 ```
 
 ### Specialised Supplies for convenience
 
 For convenience, functions are provided to directly construct a supply of integers.
 
+Create a new integer supply.
 ```purescript
--- | Create a new integer supply
-newIntSupply :: Effect (Supply Int)
+newIntSupply :: forall s. Effect (Supply s Int)
 newIntSupply = newSupply 0 (_+1)
 ```
 
+Create a new integer supply and use it without effects.
+The phantom type parameter prevents supplies from being used outside of
+the handler functions so as not to break referential transparency.
 ```purescript
--- | Create a new integer supply and use it without effects
-withIntSupply :: forall r. (Supply Int -> r) -> r
+withIntSupply :: forall r. (forall s. Supply s Int -> r) -> r
 withIntSupply = withSupply 0 (_+1)
 ```
