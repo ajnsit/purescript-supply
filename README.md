@@ -1,4 +1,4 @@
-# purescript-supply
+# Purescript Supply [![Purescript-Supply on Pursuit](https://pursuit.purescript.org/packages/purescript-supply/badge)](https://pursuit.purescript.org/packages/purescript-supply)
 A pure, splittable, value supply for Purescript
 
 ## Usage
