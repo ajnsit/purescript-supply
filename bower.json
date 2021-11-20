@@ -14,11 +14,12 @@
         "output"
     ],
     "dependencies": {
-        "purescript-console": "^v4.4.0",
-        "purescript-effect": "^v2.0.1",
-        "purescript-lazy": "^v4.0.0",
-        "purescript-newtype": "^v3.0.0",
-        "purescript-refs": "^v4.1.0",
-        "purescript-tuples": "^v5.1.0"
+        "purescript-console": "^v5.0.0",
+        "purescript-control": "^v5.0.0",
+        "purescript-effect": "^v3.0.0",
+        "purescript-lazy": "^v5.0.0",
+        "purescript-prelude": "^v5.0.1",
+        "purescript-refs": "^v5.0.0",
+        "purescript-tuples": "^v6.0.1"
     }
 }

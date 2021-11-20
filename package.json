@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "A splittable supply for Purescript",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "Anupam Jain",
   "license": "Apache-2.0"
 }
